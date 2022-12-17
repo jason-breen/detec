@@ -8,6 +8,9 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
   },
+  resolve: {
+    extensions: [".js", ".jsx"]
+  },
   //    mode: 'development',
   module: {
     rules: [
@@ -43,7 +46,10 @@ module.exports = {
       publicPath: '/build',
       directory: path.resolve(__dirname, 'build'),
     },
-    compress: true,
+    compress: false,
     port: 8080,
+    proxy: {
+        '/api': 'http://localhost:3000',
+    },
   },
 };
