@@ -6,9 +6,10 @@
   "proxy": "http://localhost:8080/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "server": "nodemon server/server.js",
-    "build": "webpack --mode=production"
+    "start": "nodemon server/server.js",
+    "build": "webpack --mode=production",
+    "dev": "webpack serve --open --mode=development & nodemon server/server.js",
+    "devWPOnly": "webpack serve --open --mode=development"
   },
   "repository": {
     "type": "git",

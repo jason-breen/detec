@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { EquipmentCards, Parentheses } from './components';
 import HeaderMain from './components/HeaderMain';
 import AddEquipment from './containers/AddEquipment';
+import { EquipmentCards, Parentheses } from './components';
+import HeaderMain from './components/HeaderMain';
+import AddEquipment from './containers/AddEquipment';
 
 
 // Get details for equipment from backend
@@ -12,7 +15,7 @@ import AddEquipment from './containers/AddEquipment';
 export default function App() {
   const [eqData, setEqData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   // // Create some state to keep track of whether we are adding equipment. If we are, we will render the add equipment component
   const [addingEquip, setAddingEquip] = useState(false);
 
@@ -30,12 +33,12 @@ export default function App() {
         setEqData(data);
         setLoading(false)
       })
-      .catch(err => console.log('Equipment api fetch ERROR: ', err));
+      .catch(err => console.log('Equipment api fetch ERROR: ', err));      
     }
     fetchFunction();
 
-  //   // return cleanup functions here
-  //   // useEffect will call the cleanup function every time it is triggered
+    // return cleanup functions here
+    // useEffect will call the cleanup function every time it is triggered
 
   }, []); // The last argument here is dependencies, variables that are used in useEffect that are located outside useEffect
 
@@ -43,11 +46,11 @@ export default function App() {
   // const eq = eqData.map(x => ((<div>x</div>)))
 
   // If using Material UI, can use circular progress.
-  // const MainDivRender = () => {
-  //   if (addingEquip) return <AddEquipment />
-  //   else if (loading) return <div>Loading!</div>
-  //   else return <EquipmentCards eqData = {eqData} />
-  // }
+  const MainDivRender = () => {
+    if (addingEquip) return <AddEquipment />
+    else if (loading) return <div>Loading!</div>
+    else return <EquipmentCards eqData = {eqData} />
+  }
 
 
   const addEqButtonHandler = (e) => {
@@ -55,21 +58,22 @@ export default function App() {
     e.preventDefault();
 
     console.log('handleClick called');
-    setAddingEquip(true);
+    if (addingEquip) setAddingEquip(false);
+    else setAddingEquip(true);
     console.log({addingEquip});
   }
 
   return(
-    <div>
+    <div> 
       <header>
-
-        {<form onSubmit={addEqButtonHandler}>
-          <button type="submit">Test Button</button>
-        </form> }
+          <button onClick={addEqButtonHandler}> 
+            {/* {myText} */}
+            {(addingEquip ? 'Return to Main' : 'Add_Equipment')}
+          </button>
         <p>Search Bar Goes Here</p>
-      </header>
-      <HeaderMain addingEquip = {addingEquip} setAddingEquip = {setAddingEquip}/>
-      {/* <MainDivRender /> */}
+      </header> 
+      {/* <HeaderMain addingEquip = {addingEquip} setAddingEquip = {setAddingEquip}/> */}
+      <MainDivRender />
     </div>
   )
 }
