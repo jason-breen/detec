@@ -11,6 +11,10 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"]
   },
+  optimization: {
+    minimize: false
+  },
+  
   //    mode: 'development',
   module: {
     rules: [
@@ -46,7 +50,8 @@ module.exports = {
       publicPath: '/build',
       directory: path.resolve(__dirname, 'build'),
     },
-    compress: false,
+    compress: true,
+    liveReload: false,
     port: 8080,
     proxy: {
         '/api': 'http://localhost:3000',
