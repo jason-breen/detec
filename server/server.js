@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 const apiRouter = require('./routes/api');
@@ -8,9 +9,12 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' });
-});
+// * handle requests for static files
+app.use(express.static(path.resolve(__dirname, '../build')));
+
+// app.get('/', (request, response) => {
+//   response.sendFile('../client/index.html')
+// });
 
 // Send API requests to apiRouter
 app.use('/api', apiRouter);
