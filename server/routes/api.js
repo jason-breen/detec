@@ -12,6 +12,14 @@ router.get('/',
   }
 );
 
+router.post('/equipment',
+  detecController.addEquipment,
+  (req, res) => {
+    // console.log('eqData in apiRouter: ', res.locals.eqData);
+    res.status(200).json(res.locals.eqData);
+  }
+);
+
 module.exports = router;
 
 
