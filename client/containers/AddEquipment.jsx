@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 
 export default function AddEquipment(props){
-    const [inputs, setInputs] = useState({serial_number: '', removed_from_service: '', operating_hq: '', equipment_type: '',kva_rating:0 ,primary_voltage: '',secondary_voltage: '',manufacturer: '',PCB_status: '',created_by: 0});
+    // Create react hook for form inputs. If inputs are passed (e.g. updating an existing record, then populate the form with its data)
+
+    const [inputs, setInputs] = useState(props.updating || {serial_number: '', removed_from_service: '', operating_hq: '', equipment_type: '',kva_rating:0 ,primary_voltage: '',secondary_voltage: '',manufacturer: '',PCB_status: '',created_by: 1});
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -10,25 +12,46 @@ export default function AddEquipment(props){
       }
 
     function handleFormSubmit(event){
-        setInputs(values => ({...values, created_by: 1}))
+        // setInputs(values => ({...values, created_by: 1}))
         event.preventDefault();
-        const body = inputs;
+
+        if(props.updating){
+          fetch(`/api/equipment/${props.updating.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'Application/JSON'
+            },
+            body: JSON.stringify(inputs)
+          })
+            .then(resp => resp.json())
+            .then((data) => {
+              console.log(data);
+              // We're done updating equipment, so change setAddingEquip to false
+              props.setAddingEquip({updating: false, bool: false});
+              // console.log(props);
+            })
+            .catch(err => console.log('AddEquipment fetch (method: UPDATE) /api/equipment: ERROR: ', err));
+        }else{
           fetch('/api/equipment', {
             method: 'POST',
             headers: {
               'Content-Type': 'Application/JSON'
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(inputs)
           })
             .then(resp => resp.json())
             .then((data) => {
               console.log(data);
+              // We're done adding equipment, so change setAddingEquip to false
+              props.setAddingEquip(false);
+              // console.log(props);
             })
             .catch(err => console.log('AddEquipment fetch /api/equipment: ERROR: ', err));
+        }
     }
 
     return(
-        <div>
+        <div className="p-3">
             This is the container for adding equipment
             <form onSubmit={handleFormSubmit}>
                 Serial Num: <input type="text" name="serial_number" value={inputs.serial_number || ""} onChange={handleChange} /><br />
@@ -40,7 +63,7 @@ export default function AddEquipment(props){
                 SV: <input type="text" name="secondary_voltage" value={inputs.secondary_voltage || ""} onChange={handleChange} /><br />
                 Mfg: <input type="text" name="manufacturer" value={inputs.manufacturer || ""} onChange={handleChange} /><br />
                 PCB Status: <input type="text" name="PCB_status" value={inputs.PCB_status || ""} onChange={handleChange} /><br />
-                <input type="submit" />
+                <input className="bg-sky-700 text-white font-semibold hover:bg-buttonHover rounded px-2 py-1" type="submit" />
             </form>
         </div>
     )

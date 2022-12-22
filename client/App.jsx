@@ -8,12 +8,13 @@ import EquipmentBoard from './containers/EquipmentBoard';
 export default function App() {
   
   // Create some state to keep track of whether we are adding equipment. If we are, we will render the add equipment component
-  const [addingEquip, setAddingEquip] = useState(false);
+  const [addingEquip, setAddingEquip] = useState({bool: false, updating: false});
   
   // If using Material UI, can use circular progress.
   const MainDivRender = () => {
-    if (addingEquip) return <AddEquipment />
-    else return <EquipmentBoard />
+    console.log({addingEquip})
+    if (addingEquip.bool) return <AddEquipment updating={addingEquip.updating} setAddingEquip={setAddingEquip} />
+    else return <EquipmentBoard setAddingEquip={setAddingEquip} />
   }
 
 
@@ -21,22 +22,15 @@ export default function App() {
 
     e.preventDefault();
 
-    console.log('handleClick called');
-    if (addingEquip) setAddingEquip(false);
-    else setAddingEquip(true);
+    console.log('addEqButtonHandler called');
+    if (addingEquip.bool) setAddingEquip({updating: false, bool: false});
+    else setAddingEquip({...addingEquip, bool: true});
     console.log({addingEquip});
   }
 
   return(
     <div> 
-      <header>
-          <button onClick={addEqButtonHandler}> 
-            {/* {myText} */}
-            {(addingEquip ? 'Return to Main' : 'Add Equipment')}
-          </button>
-        <p>Search Bar Goes Here</p>
-      </header> 
-      {/* <HeaderMain addingEquip = {addingEquip} setAddingEquip = {setAddingEquip}/> */}
+      <HeaderMain addingEquip = {addingEquip} addEqButtonHandler = {addEqButtonHandler}/>
       <MainDivRender />
     </div>
   )
