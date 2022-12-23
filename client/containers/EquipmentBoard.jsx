@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import EquipmentCard from "../components/EquipmentCard";
 
 export default function EquipmentBoard(props){
-  const [eqData, setEqData] = useState([]);
+  
   const [loading, setLoading] = useState(true);
 
   let eqArray;
@@ -21,12 +21,17 @@ export default function EquipmentBoard(props){
       .then((data) => {
         if (!Array.isArray(data)) eqArray = [];
         console.log('fetch result:', data);
-        setEqData(data);
+        props.methods.setEqData(data);
         setLoading(false)
       })
       .catch(err => console.log('Equipment api fetch ERROR: ', err));      
     }
-    if (eqData == []) {fetchFunction();}
+    if(props.eqData.length === 0){
+      
+      console.log('calling fetch function');
+      fetchFunction();
+    }
+    else (setLoading(false))
     // return cleanup functions here
     // useEffect will call the cleanup function every time it is triggered
   }, []); // The last argument here is dependencies, variables that are used in useEffect that are located outside useEffect
@@ -47,7 +52,7 @@ export default function EquipmentBoard(props){
           .then((data) => {
             if (!Array.isArray(data)) eqArray = [];
             console.log('fetch result:', data);
-            setEqData(eqData.filter(x => x.id !== eqId));
+            props.methods.setEqData(props.eqData.filter(x => x.id !== eqId));
           })
           .catch(err => console.log('Equipment api fetch ERROR: ', err));      
         // }
@@ -56,14 +61,14 @@ export default function EquipmentBoard(props){
 
       handleModifyButton: (eqData) => {
         console.log('Modify button pressed for id: ', eqData.id);
-        props.setAddingEquip({updating: eqData, bool: true});
+        props.methods.setAddingEquip({updating: eqData, bool: true});
 
       }
     }
 
     // const eqCardsToRender = props.eqData.map((x,i) => EquipmentCard(x,{key:i}));
     // const eqCardsToRender = props.eqData.map((x,i) => EquipmentCard({x, key:i}));
-    const eqCardsToRender = eqData.map((x,i) => <EquipmentCard eqData={x} eqMethods={eqMethods} key={i} />);
+    const eqCardsToRender = props.eqData.map((x,i) => <EquipmentCard eqData={x} eqMethods={eqMethods} key={i} />);
 
     if (loading) return <div>Loading!</div>
     else return <div className="flex flex-row flex-wrap gap-3 p-3">{eqCardsToRender}</div>

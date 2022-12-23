@@ -32,7 +32,7 @@ router.patch('/equipment/:eqId',
   detecController.updateEquipment,
   (req, res) => {
     // console.log('eqData in apiRouter: ', res.locals.eqData);
-    res.status(200).json(`Item with record ID ${req.params.eqId} updated as follows: ${res.locals.eqData}`);
+    res.status(200).json(res.locals.eqData);
   }
 );
 
